@@ -31,6 +31,14 @@ void disastrOS_shutdown();
 // timers
 void disastrOS_sleep(int);
 
+
+// semaphores
+int DisastrOS_semOpen(int semnum);
+int DisastrOS_semClose(int semnum);
+int DisastrOS_semWait(int semnum);
+int DisastrOS_semPost(int semnum);
+
+
 // respurces (files)
 int disastrOS_openResource(int resource_id, int type, int mode);
 int disastrOS_closeResource(int fd) ;
