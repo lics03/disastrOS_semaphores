@@ -8,6 +8,16 @@
 
 void internal_semOpen(){
   // do stuff :)
-    
+
+  int semnum = running -> syscall_args[0];
+
+  Semaphore* s = Semaphore_alloc(semnum, 0);
+  if(!s){
+    running -> syscall_retvalue = -1;
+    return;
+  }
+
   
+
+
 }
