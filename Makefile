@@ -1,5 +1,5 @@
 CC=gcc
-CCOPTS=--std=gnu99 -Wall 
+CCOPTS=--std=gnu99 -Wall -D_XOPEN_SOURCE=600
 AR=ar
 
 HEADERS=disastrOS.h\
