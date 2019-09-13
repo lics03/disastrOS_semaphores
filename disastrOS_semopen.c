@@ -15,27 +15,20 @@ void internal_semOpen(){
   Semaphore* sem = SemaphoreList_byId(&semaphores_list, semnum);
 
   // se non esiste lo creo
-  if(sem){
-
+  if(!sem){
     sem = Semaphore_alloc(semnum, 0);
     if(!sem){
-      running -> syscall_retvalue = -1;
+      running -> syscall_retvalue = DSOS_ESEMAPHORECREATE;
       return;
     }
 
     List_insert(&semaphores_list, semaphores_list.last, (ListItem*) sem);
   }
 
-  if (!sem) {
-     running->syscall_retvalue = -1;
-     return;
-  }
-
-
   // creo il descrittore per il semaforo in questo processo e lo aggiungo alla lista dei descrittori
   SemDescriptor* sem_des = SemDescriptor_alloc(running -> last_sem_fd, sem, running);
   if(!sem_des){
-    running -> syscall_retvalue = -1;
+    running -> syscall_retvalue = DSOS_ESEMAPHORENOFD;
     return;
   }
 
@@ -45,7 +38,6 @@ void internal_semOpen(){
   // creo il puntatore al nuovo descrittore 
   SemDescriptorPtr * sem_des_ptr = SemDescriptorPtr_alloc(sem_des);
 
-  
   List_insert(&running -> sem_descriptors, running -> sem_descriptors.last, (ListItem*) sem_des);
   
   // aggiungo al semaforo, nella lista dei descrittori, un puntatore al nuovo descrittore creato

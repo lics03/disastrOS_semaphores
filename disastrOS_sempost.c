@@ -16,11 +16,32 @@ void internal_semPost(){
 
   // se il sem_fd non è nel processo ritorna un errore
   if (!sem_des) {
-      running -> syscall_retvalue = -1;
+      running -> syscall_retvalue = DSOS_ESEMAPHORENOTPRESENT;
       return;
   }
 
+  // se c'è prendo il semaforo
   Semaphore* sem = sem_des -> semaphore;
 
+  if (!sem) {
+    running -> syscall_retvalue = DSOS_ESEMAPHOREOPEN;
+    return;
+  }
 
+  if(sem->count < 0){
+
+
+
+
+
+
+
+  }
+
+  // incremento il valore
+  (sem->count)++;
+
+  // ritorna 0 in caso di successo
+  running -> syscall_retvalue = 0;
+  
 }

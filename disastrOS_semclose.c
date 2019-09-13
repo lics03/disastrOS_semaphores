@@ -16,7 +16,7 @@ void internal_semClose(){
 
   // se il sem_fd non è nel processo ritorna un errore
   if (!sem_des) {
-      running -> syscall_retvalue = -1;
+      running -> syscall_retvalue = DSOS_ESEMAPHORECLOSE;
       return;
   }
 
