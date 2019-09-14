@@ -29,16 +29,24 @@ void internal_semPost(){
   }
 
   if(sem->count < 0){
+    // rimuovo il primo processo nella waiting queue del semaforo
+    SemDescriptorPtr* proc = (SemDescriptorPtr*) List_detach(&(sem -> waiting_descriptors), (ListItem*) sem -> waiting_descriptors.first);
 
+    // prendo il PCB di quel processo
+    PCB* proc_pcb = proc -> descriptor -> pcb;
 
+    // rimuovo il processo dalla waiting list del sistema
+    List_detach(&waiting_list, (ListItem*) proc_pcb);
 
+    // cambio lo stato del processo a Ready
+    proc_pcb -> status = Ready;
 
-
-
+    // inserisco il processo nella ready list del sistema
+    List_insert(&ready_list, ready_list.last, (ListItem*) proc_pcb);
 
   }
 
-  // incremento il valore
+  // incremento il valore del semaforo
   (sem->count)++;
 
   // ritorna 0 in caso di successo

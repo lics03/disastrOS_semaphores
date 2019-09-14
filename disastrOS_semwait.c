@@ -28,14 +28,19 @@ void internal_semWait(){
     return;
   }
 
-  //se il valore del semaforo è <= 0 il processo deve aspettare nella lista waiting_descriptors
+  // se il valore del semaforo è <= 0 il processo deve aspettare nella lista waiting_descriptors
   if(sem->count <= 0){
+
     (sem->count)--;
-    List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem*)sem_des);
-    //il processo passa nello stato di waiting
+    List_insert(&sem -> waiting_descriptors, sem -> waiting_descriptors.last, (ListItem*) sem_des -> ptr);
+
+    // il processo passa nello stato di waiting
     running -> status = Waiting;
-    //lo inserisco nella waiting list
+
+    // lo inserisco nella waiting list del sistema
     List_insert(&waiting_list, waiting_list.last, (ListItem*) running);
+
+    // mando in running il primo processo nella coda dei ready (se c'è)
     if (ready_list.first)
       running = (PCB*) List_detach(&ready_list, ready_list.first);
     else {
