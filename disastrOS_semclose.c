@@ -29,9 +29,21 @@ void internal_semClose(){
   // rimuovo il sem descriptor pointer dalla lista dei semafori
   SemDescriptorPtr* sem_des_ptr = (SemDescriptorPtr*) List_detach(&(sem -> descriptors), (ListItem*)(sem_des -> ptr));
   assert(sem_des_ptr);
-  
+
+  // libero la memoria allocata
   SemDescriptor_free(sem_des);
   SemDescriptorPtr_free(sem_des_ptr);
+
+
+  // controllo se il semaforo è stato chiuso da tutti i processi che lo hanno aperto 
+  if(sem -> descriptors.size == 0){
+
+    sem = (Semaphore*) List_detach(&semaphores_list, (ListItem*) sem);
+    // sem non deve essere nullo, in quanto il semaforo deve essere nella semaphores_list
+    assert(sem);
+    // libero la memoria
+    Semaphore_free(sem);
+  }
 
   // ritorna 0 in caso di successo
   running -> syscall_retvalue = 0;
