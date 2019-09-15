@@ -36,17 +36,17 @@ void internal_semOpen(){
     running -> syscall_retvalue = open_descriptor -> fd;
     return;
   }
-  else{
-    // creo il descrittore per il semaforo in questo processo e lo aggiungo alla lista dei descrittori
-    SemDescriptor* sem_des = SemDescriptor_alloc(running -> last_sem_fd, sem, running);
-    if(!sem_des){
-      running -> syscall_retvalue = DSOS_ESEMAPHORENOFD;
-      return;
-    }
 
-    // incremento sem_fd per la prossima chiamata
-    running -> last_sem_fd++;
+  // se il semaforo non è aperto:
+  // creo il descrittore per il semaforo in questo processo e lo aggiungo alla lista dei descrittori
+  SemDescriptor* sem_des = SemDescriptor_alloc(running -> last_sem_fd, sem, running);
+  if(!sem_des){
+    running -> syscall_retvalue = DSOS_ESEMAPHORENOFD;
+    return;
   }
+
+  // incremento sem_fd per la prossima chiamata
+  running -> last_sem_fd++;
 
 
   // creo il puntatore al nuovo descrittore 
