@@ -56,7 +56,7 @@ void internal_semOpen(){
     return;
   }
 
-  List_insert(&running -> sem_descriptors, running -> sem_descriptors.last, (ListItem*) sem_des);
+  List_insert(&(running -> sem_descriptors), running -> sem_descriptors.last, (ListItem*) sem_des);
   
   // aggiungo al semaforo, nella lista dei descrittori, un puntatore al nuovo descrittore creato
   sem_des -> ptr = sem_des_ptr;
