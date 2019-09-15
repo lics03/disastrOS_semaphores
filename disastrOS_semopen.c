@@ -16,27 +16,45 @@ void internal_semOpen(){
 
   // se non esiste lo creo
   if(!sem){
+
     sem = Semaphore_alloc(semnum, 0);
+    // se non può essere creato torna errore
     if(!sem){
       running -> syscall_retvalue = DSOS_ESEMAPHORECREATE;
       return;
     }
 
+    // inserisco il semaforo appena creato nella semaphores_list
     List_insert(&semaphores_list, semaphores_list.last, (ListItem*) sem);
   }
 
-  // creo il descrittore per il semaforo in questo processo e lo aggiungo alla lista dei descrittori
-  SemDescriptor* sem_des = SemDescriptor_alloc(running -> last_sem_fd, sem, running);
-  if(!sem_des){
-    running -> syscall_retvalue = DSOS_ESEMAPHORENOFD;
+  // controllo se è già presente il descrittore del semaforo nel processo, quindi se il semaforo è già aperto
+  SemDescriptor* open_descriptor = Search_id(&(running->sem_descriptors), semnum);
+  
+  // se è aperto torno il suo descrittore
+  if(open_descriptor){
+    running -> syscall_retvalue = open_descriptor -> fd;
     return;
   }
+  else{
+    // creo il descrittore per il semaforo in questo processo e lo aggiungo alla lista dei descrittori
+    SemDescriptor* sem_des = SemDescriptor_alloc(running -> last_sem_fd, sem, running);
+    if(!sem_des){
+      running -> syscall_retvalue = DSOS_ESEMAPHORENOFD;
+      return;
+    }
 
-  // incremento sem_fd per la prossima chiamata
-  running -> last_sem_fd++;
+    // incremento sem_fd per la prossima chiamata
+    running -> last_sem_fd++;
+  }
+
 
   // creo il puntatore al nuovo descrittore 
-  SemDescriptorPtr * sem_des_ptr = SemDescriptorPtr_alloc(sem_des);
+  SemDescriptorPtr* sem_des_ptr = SemDescriptorPtr_alloc(sem_des);
+  if(!sem_des_ptr){
+    running -> syscall_retvalue = DSOS_ESEMAPHORENOFDPTR;
+    return;
+  }
 
   List_insert(&running -> sem_descriptors, running -> sem_descriptors.last, (ListItem*) sem_des);
   
