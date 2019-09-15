@@ -28,16 +28,7 @@ void internal_semOpen(){
     List_insert(&semaphores_list, semaphores_list.last, (ListItem*) sem);
   }
 
-  // controllo se è già presente il descrittore del semaforo nel processo, quindi se il semaforo è già aperto
-  SemDescriptor* open_descriptor = Search_id(&(running->sem_descriptors), semnum);
-  
-  // se è aperto torno il suo descrittore
-  if(open_descriptor){
-    running -> syscall_retvalue = open_descriptor -> fd;
-    return;
-  }
 
-  // se il semaforo non è aperto:
   // creo il descrittore per il semaforo in questo processo e lo aggiungo alla lista dei descrittori
   SemDescriptor* sem_des = SemDescriptor_alloc(running -> last_sem_fd, sem, running);
   if(!sem_des){
