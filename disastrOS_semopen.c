@@ -14,9 +14,13 @@ void internal_semOpen(){
   // controllo se il semaforo è già presente nel sistema
   Semaphore* sem = SemaphoreList_byId(&semaphores_list, semnum);
 
-  // se non esiste lo creo
-  if(!sem){
-
+  // se esiste già non devo crearlo, altrimenti lo creo
+  if(sem){
+    running -> syscall_retvalue = DSOS_ESEMAPHOREOPEN;
+    return;
+  }
+  
+  else{
     sem = Semaphore_alloc(semnum, 1);
     // se non può essere creato torna errore
     if(!sem){
