@@ -12,6 +12,7 @@ typedef struct SemDescriptor{
   Semaphore* semaphore;
   int fd;
   struct SemDescriptorPtr* ptr; // pointer to the entry in the resource list
+  struct SemDescriptorPtr* ptr_waiting_list; // pointer to the entry in the waiting list
 } SemDescriptor;
 
 typedef struct SemDescriptorPtr{

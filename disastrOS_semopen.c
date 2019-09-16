@@ -46,11 +46,21 @@ void internal_semOpen(){
     running -> syscall_retvalue = DSOS_ESEMAPHORENOFDPTR;
     return;
   }
+  sem_des -> ptr = sem_des_ptr;
 
+
+  // creo il puntatore al descrittore nella waiting list
+  SemDescriptorPtr* sem_des_ptr_waiting_list = SemDescriptorPtr_alloc(sem_des);
+    if(!sem_des_ptr_waiting_list) {
+      running -> syscall_retvalue = DSOS_ESEMAPHORENOFDPTR;
+      return;
+    }
+    sem_des -> ptr_waiting_list = sem_des_ptr_waiting_list;
+
+  // aggiungo il descrittore del semaforo alla lista dei descrittori del processo running
   List_insert(&(running -> sem_descriptors), running -> sem_descriptors.last, (ListItem*) sem_des);
   
   // aggiungo al semaforo, nella lista dei descrittori, un puntatore al nuovo descrittore creato
-  sem_des -> ptr = sem_des_ptr;
   List_insert(&(sem -> descriptors), sem -> descriptors.last, (ListItem*) sem_des_ptr);
 
   // ritorna il fd del nuovo descrittore

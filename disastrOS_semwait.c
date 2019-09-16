@@ -34,9 +34,7 @@ void internal_semWait(){
   // se il valore del semaforo è < 0 il processo deve aspettare nella lista waiting_descriptors
   if(sem->count < 0){
 
-    //alloco un puntatore al sem_des per la waiting queue
-    SemDescriptorPtr* ptr_des = SemDescriptorPtr_alloc(sem_des);
-    List_insert(&sem -> waiting_descriptors, sem -> waiting_descriptors.last, (ListItem*) ptr_des);
+    List_insert(&sem -> waiting_descriptors, sem -> waiting_descriptors.last, (ListItem*) sem_des -> ptr_waiting_list);
 
     // il processo passa nello stato di waiting
     running -> status = Waiting;
@@ -55,5 +53,5 @@ void internal_semWait(){
   
   // ritorna 0 in caso di successo
   running -> syscall_retvalue = 0;
-  
+
 }

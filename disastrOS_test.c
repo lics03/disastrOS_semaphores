@@ -32,7 +32,7 @@ void childFunction(void* args){
     disastrOS_semWait(sem);
 
     // sezione critica
-    printf("Il processo %d sta entrando in sezione critica!\n", disastrOS_getpid());
+    printf("Il processo %d sta entrando in sezione critica\n", disastrOS_getpid());
     disastrOS_sleep(disastrOS_getpid()*2);
     printf("Il processo %d sta uscendo dalla sezione critica\n", disastrOS_getpid());
 
