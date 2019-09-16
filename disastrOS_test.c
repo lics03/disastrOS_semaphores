@@ -21,7 +21,7 @@ void childFunction(void* args){
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
   
-  // apro i semaforo
+  // apro i semafori
   int sem = disastrOS_semOpen(0);
   int sem2 = disastrOS_semOpen(0);
   int sem3 = disastrOS_semOpen(3);
@@ -46,7 +46,7 @@ void childFunction(void* args){
 
   }
 
-  // chiudo i semaforo
+  // chiudo i semafori
   disastrOS_semClose(sem);
   disastrOS_semClose(sem2);
   disastrOS_semClose(sem3);
@@ -85,7 +85,7 @@ void initFunction(void* args) {
 	   pid, retval, alive_children);
     --alive_children;
   }
-  printf("shutdown!");
+  printf("shutdown!\n");
   disastrOS_shutdown();
 }
 
