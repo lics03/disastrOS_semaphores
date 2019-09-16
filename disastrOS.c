@@ -146,6 +146,11 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   Timer_init();
   Resource_init();
   Descriptor_init();
+
+  // inizializzo Semaphore e SemDescriptor
+  Semaphore_init();
+  SemDescriptor_init();
+
   init_pcb=0;
 
   // populate the vector of syscalls and number of arguments for each syscall
@@ -239,6 +244,7 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   // create a trampoline for the first process (see spawn)
   disastrOS_debug("preparing trampoline for first process ... ");
   getcontext(&running->cpu_state);
+  
   running->cpu_state.uc_stack.ss_sp = running->stack;
   running->cpu_state.uc_stack.ss_size = STACK_SIZE;
   running->cpu_state.uc_stack.ss_flags = 0;
@@ -290,19 +296,19 @@ void disastrOS_sleep(int sleep_time) {
 
 //aggiungo le syscall per le mie funzioni
 
-int DisastrOS_semOpen(int semnum) {
+int disastrOS_semOpen(int semnum) {
   return disastrOS_syscall(DSOS_CALL_SEMOPEN, semnum);
 }
 
-int DisastrOS_semClose(int semnum) {
+int disastrOS_semClose(int semnum) {
   return disastrOS_syscall(DSOS_CALL_SEMCLOSE, semnum);
 }
 
-int DisastrOS_semWait(int semnum) {
+int disastrOS_semWait(int semnum) {
   return disastrOS_syscall(DSOS_CALL_SEMWAIT, semnum);
 }
 
-int DisastrOS_semPost(int semnum) {
+int disastrOS_semPost(int semnum) {
   return disastrOS_syscall(DSOS_CALL_SEMPOST, semnum);
 }
 

@@ -33,10 +33,10 @@ void disastrOS_sleep(int);
 
 
 // semaphores
-int DisastrOS_semOpen(int semnum);
-int DisastrOS_semClose(int semnum);
-int DisastrOS_semWait(int semnum);
-int DisastrOS_semPost(int semnum);
+int disastrOS_semOpen(int semnum);
+int disastrOS_semClose(int semnum);
+int disastrOS_semWait(int semnum);
+int disastrOS_semPost(int semnum);
 
 
 // respurces (files)
