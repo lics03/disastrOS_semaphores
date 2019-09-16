@@ -17,7 +17,7 @@ void internal_semOpen(){
   // se non esiste lo creo
   if(!sem){
 
-    sem = Semaphore_alloc(semnum, 0);
+    sem = Semaphore_alloc(semnum, 1);
     // se non può essere creato torna errore
     if(!sem){
       running -> syscall_retvalue = DSOS_ESEMAPHORECREATE;

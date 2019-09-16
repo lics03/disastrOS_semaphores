@@ -20,12 +20,30 @@ void childFunction(void* args){
   int mode=0;
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
-  printf("PID: %d, terminating\n", disastrOS_getpid());
+  
+  // apro un semaforo
+  int sem = disastrOS_semOpen(0);
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
     disastrOS_sleep((20-disastrOS_getpid())*5);
+
+
+    disastrOS_semWait(sem);
+
+    // sezione critica
+    printf("Il processo %d sta entrando in sezione critica!\n", disastrOS_getpid());
+    disastrOS_sleep(disastrOS_getpid()*2);
+    printf("Il processo %d sta uscendo dalla sezione critica\n", disastrOS_getpid());
+
+    disastrOS_semPost(sem);
+
   }
+
+  // chiudo il semaforo
+  disastrOS_semClose(sem);
+
+  printf("PID: %d, terminating\n", disastrOS_getpid());
   disastrOS_exit(disastrOS_getpid()+1);
 }
 

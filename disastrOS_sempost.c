@@ -28,7 +28,10 @@ void internal_semPost(){
     return;
   }
 
-  if(sem->count < 0){
+  // incremento il valore del semaforo
+  (sem->count)++;
+
+  if(sem->count <= 0){
     // rimuovo il primo processo nella waiting queue del semaforo
     SemDescriptorPtr* proc = (SemDescriptorPtr*) List_detach(&(sem -> waiting_descriptors), (ListItem*) sem -> waiting_descriptors.first);
 
@@ -45,9 +48,6 @@ void internal_semPost(){
     List_insert(&ready_list, ready_list.last, (ListItem*) proc_pcb);
 
   }
-
-  // incremento il valore del semaforo
-  (sem->count)++;
 
   // ritorna 0 in caso di successo
   running -> syscall_retvalue = 0;
