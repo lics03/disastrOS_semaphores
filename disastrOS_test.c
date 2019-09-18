@@ -21,10 +21,12 @@ void childFunction(void* args){
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
   
+  
   // apro i semafori
+  printf("Il processo %d sta aprendo il semaforo sem\n", disastrOS_getpid());
   int sem = disastrOS_semOpen(0);
-  int sem2 = disastrOS_semOpen(0);
-  int sem3 = disastrOS_semOpen(3);
+  printf("Il processo %d sta aprendo il semaforo sem2\n", disastrOS_getpid());
+  int sem2 = disastrOS_semOpen(3);
 
   for (int i=0; i<(disastrOS_getpid()+1); ++i){
     printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
@@ -33,23 +35,22 @@ void childFunction(void* args){
 
     disastrOS_semWait(sem);
     disastrOS_semWait(sem2);
-    disastrOS_semWait(sem3);
-
+    
     // sezione critica
     printf("Il processo %d sta entrando in sezione critica\n", disastrOS_getpid());
     disastrOS_sleep(disastrOS_getpid()*2);
     printf("Il processo %d sta uscendo dalla sezione critica\n", disastrOS_getpid());
 
-    disastrOS_semPost(sem3);
     disastrOS_semPost(sem2);
     disastrOS_semPost(sem);
 
   }
 
   // chiudo i semafori
+  printf("Il processo %d sta chiudendo il semaforo sem\n", disastrOS_getpid());
   disastrOS_semClose(sem);
+  printf("Il processo %d sta chiudendo il semaforo sem2\n", disastrOS_getpid());
   disastrOS_semClose(sem2);
-  disastrOS_semClose(sem3);
 
 
   printf("PID: %d, terminating\n", disastrOS_getpid());

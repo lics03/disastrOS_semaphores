@@ -14,23 +14,19 @@ void internal_semOpen(){
   // controllo se il semaforo è già presente nel sistema
   Semaphore* sem = SemaphoreList_byId(&semaphores_list, semnum);
 
-
-  // se esiste già non devo crearlo, altrimenti lo creo
-  if(sem){
-    running -> syscall_retvalue = DSOS_ESEMAPHOREOPEN;
-    return;
-  }
-  
-  sem = Semaphore_alloc(semnum, 1);
-  // se non può essere creato torna errore
+  // se non esiste, lo creo
   if(!sem){
-    running -> syscall_retvalue = DSOS_ESEMAPHORECREATE;
-    return;
+    
+    sem = Semaphore_alloc(semnum, 1);
+    // se non può essere creato torna errore
+    if(!sem){
+      running -> syscall_retvalue = DSOS_ESEMAPHORECREATE;
+      return;
+    }
+
+    // inserisco il semaforo appena creato nella semaphores_list
+    List_insert(&semaphores_list, semaphores_list.last, (ListItem*) sem);
   }
-
-  // inserisco il semaforo appena creato nella semaphores_list
-  List_insert(&semaphores_list, semaphores_list.last, (ListItem*) sem);
-
 
   // creo il descrittore per il semaforo in questo processo e lo aggiungo alla lista dei descrittori
   SemDescriptor* sem_des = SemDescriptor_alloc(running -> last_sem_fd, sem, running);
